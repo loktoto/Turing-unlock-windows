@@ -1,9 +1,9 @@
-# Turing Unlock for Windows
+# Turing Unlock for Windows — NVIDIA RTX 2080 Ti / TU102
 
 [![Host checks](https://github.com/loktoto/Turing-unlock-windows/actions/workflows/host.yml/badge.svg)](https://github.com/loktoto/Turing-unlock-windows/actions/workflows/host.yml)
 [![License: GPL-2.0-only](https://img.shields.io/badge/license-GPL--2.0--only-blue)](LICENSE)
 
-An experimental, community-maintained TU102 port project hosted by **loktoto**.
+**NVIDIA Turing GPU unlock research for Windows (TU102 / RTX 2080 Ti 22GB):** an experimental, community-maintained port and portable C host-validation toolkit hosted by **loktoto**.
 The long-term goal is RTX 2080 Ti 22GB → UEFI pre-boot unlock → stock NVIDIA
 Windows driver → CUDA → measurable Strata inference improvements.
 
