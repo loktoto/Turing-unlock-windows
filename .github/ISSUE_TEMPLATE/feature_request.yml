@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a focused improvement within the documented research stages.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The current deliverable is an experimental Windows-first G1 host foundation. Describe proposed behavior separately from demonstrated capabilities. Do not attach firmware dumps, proprietary binaries, secrets, or unredacted inventories.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What concrete problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change and stage
+      description: Describe the behavior and its relationship to BUILD_DIRECTION.md. Include alternatives considered.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Acceptance evidence
+      description: How can this be verified? Identify required synthetic tests, Windows toolchains, or later hardware evidence and any prerequisites.
+    validations:
+      required: true

@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible host build, test, parser, or documentation problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is an experimental G1 host foundation. Host test success does not demonstrate GPU unlock or Windows driver support. Do not attach firmware dumps, proprietary binaries, secrets, recovery keys, or unredacted inventories. Review logs for personal paths and identifiers.
+  - type: input
+    id: revision
+    attributes:
+      label: Revision
+      description: Git commit hash and any local changes.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS/version, architecture, compiler/version, CMake/CTest versions, and build configuration. No GPU is needed for host tests.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands and a minimal synthetic input or reproduction, if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Expected and actual results
+      description: Include exit codes, failing stage, test name, and relevant error messages.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Test evidence
+      description: Redacted result.json summary, relevant configure/build/test logs, or CTest output. Identify Windows MSVC, clang-cl, and Linux runs separately; say which were not run.
+    validations:
+      required: true
+  - type: checkboxes
+    id: review
+    attributes:
+      label: Submission review
+      options:
+        - label: I searched existing issues and reviewed attachments for firmware, secrets, and personal identifiers.
+          required: true

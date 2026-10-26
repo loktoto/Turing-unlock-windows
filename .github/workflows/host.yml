@@ -1,0 +1,67 @@
+name: Host checks
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  linux-sanitizers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    env:
+      CC: ${{ matrix.compiler }}
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DSANITIZE=ON
+      - run: cmake --build build --parallel 2
+      - run: ctest --test-dir build --output-on-failure
+
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        toolset: [v143, ClangCL]
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -T "${{ matrix.toolset }}"
+      - run: cmake --build build --config Debug
+      - run: ctest --test-dir build -C Debug --output-on-failure
+
+  fuzz-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CC: clang
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build-fuzz -DCMAKE_BUILD_TYPE=Debug -DFUZZ=ON
+      - run: cmake --build build-fuzz --parallel 2
+      - run: ctest --test-dir build-fuzz --output-on-failure
+      - run: python3 scripts/make_fuzz_corpus.py build-corpus
+      - name: Bounded synthetic-corpus fuzz smoke
+        shell: bash
+        run: |
+          mkdir -p fuzz-artifacts
+          ./build-fuzz/fuzz_parsers build-corpus -seed=1 -runs=10000 -max_total_time=30 \
+            -timeout=5 -rss_limit_mb=2048 -max_len=1048576 \
+            -artifact_prefix=fuzz-artifacts/ > fuzz-artifacts/fuzz.log 2>&1 || {
+              tail -n 100 fuzz-artifacts/fuzz.log
+              exit 1
+            }
+          tail -n 20 fuzz-artifacts/fuzz.log
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fuzz-failure
+          path: fuzz-artifacts/
+          if-no-files-found: ignore
