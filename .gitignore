@@ -6,3 +6,24 @@ __pycache__/
 *.pyc
 fuzz-artifacts/
 SOURCE_MANIFEST.json
+
+# Privacy guard — avoid committing local credentials or personal records.
+**/.env
+**/.env.*
+**/.npmrc
+**/credentials.*
+**/service-account*.json
+**/.ssh/
+*.pem
+*.pfx
+*.p12
+*.key
+*.jks
+**/personal/
+**/private-data/
+**/payment-data/
+**/customer-data/
+**/real-data/
+**/logs/
+**/*.sqlite
+**/*.db
