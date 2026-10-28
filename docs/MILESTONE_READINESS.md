@@ -1,6 +1,6 @@
 # Milestone readiness
 
-This is an evidence ledger, not authorization to perform device writes. No target inventory or target-hardware results were supplied. [Upstream research](UPSTREAM_RESEARCH.md) distinguishes source observations from verified behavior. The [host CI run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686) succeeded for commit `4a587da`; it is host evidence, not target-hardware evidence. Changes after that commit require their own validation.
+This is an evidence ledger, not authorization to perform device writes. No target inventory or target-hardware results were supplied. [Upstream research](UPSTREAM_RESEARCH.md) distinguishes source observations from verified behavior. The [host CI run 40637956001](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40637956001) succeeded for commit `d052ec2`, including the delivered Windows PowerShell runner with MSVC and clang-cl; it is host evidence, not target-hardware evidence. Changes after that commit require their own validation.
 
 | Gate | Status | Evidence and remaining acceptance |
 |---|---|---|
@@ -15,9 +15,9 @@ This is an evidence ledger, not authorization to perform device writes. No targe
 ## Remaining G1 acceptance
 
 1. Preserve and review the Windows MSVC and clang-cl build and test results, runner versions and logs from the successful CI run, and repeat them for the final reviewed commit. Distinguish a remote CI pass from a physical target test.
-2. Define expected fields, errors and output-on-failure contracts; extend independent differential tests beyond the current synthetic FWSEC comparisons to all retained parsers and layout, including structured valid and malformed cases. Resolve intentional differences explicitly.
-3. Measure branch coverage and close meaningful gaps in truncation, arithmetic, format boundaries and lifecycle failure/recovery paths; preserve reproducible commands and reports. Continue seeded longer fuzzing under sanitizers, retain any reproducer and document limits rather than treating a finite run as proof.
-4. Specify and review firmware input provenance, length and integrity/authenticity policy independently of parsing. Do not distribute proprietary payloads. Review the state model against an explicit multi-buffer DMA and ownership contract; test uncertain side effects, partial mappings, cleanup failure, reset and handoff without asserting hardware quiescence. Independent review must sign off the chosen acceptance criteria and residual limitations.
+2. Review the [input/output contracts](INPUT_AND_API_CONTRACTS.md) and the [7,663-case differential corpus](DIFFERENTIAL_TESTING.md), which now covers all retained function families. Expand structured cases where meaningful and retain independent golden expectations; shared upstream agreement alone is not correctness.
+3. [Branch coverage](HOST_COVERAGE.md) is measured; close remaining meaningful gaps in truncation, arithmetic, format boundaries and lifecycle failure/recovery paths; preserve reproducible commands and reports. Continue seeded longer fuzzing under sanitizers, retain any reproducer and document limits rather than treating a finite run as proof.
+4. Review the [firmware input and API contract](INPUT_AND_API_CONTRACTS.md) and implement its future-loader admission checks separately from parsing. Do not distribute proprietary payloads. Review the state model against an explicit multi-buffer DMA and ownership contract; test uncertain side effects, partial mappings, cleanup failure, reset and handoff without asserting hardware quiescence. Independent review must sign off the chosen acceptance criteria and residual limitations.
 
 ## G2 read-only design for review
 

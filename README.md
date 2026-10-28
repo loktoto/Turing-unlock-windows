@@ -43,7 +43,7 @@ UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build --output-on-failure
 ```
 
 See [build validation](docs/BUILD_VALIDATION.md) for synthetic-seeded fuzzing.
-Local Linux GCC and Clang sanitizer runs passed all four test suites; see the
+Local Linux GCC and Clang sanitizer runs passed all five test suites; see the
 [recorded evidence](docs/G1_TEST_REPORT.md). A workflow badge describes CI, not
 hardware support. Windows execution is not claimed by the local evidence.
 
@@ -69,6 +69,7 @@ hardware support. Windows execution is not claimed by the local evidence.
 | G5 | Stock Windows driver + CUDA/GEMM validation | Not started |
 | G6 | Repeated Strata Prefill/TTFT/Decode A/B | Not started |
 
+[Milestone readiness](docs/MILESTONE_READINESS.md) tracks the current evidence and blockers.
 [Build direction](docs/BUILD_DIRECTION.md) defines the sequencing. G1 is not
 complete merely because host tests pass. A separate RTX 3080 research line is
 outside the initial TU102 scope; this is not a multi-GPU inference project.
@@ -106,3 +107,22 @@ Windows MSVC and clang-cl, Linux GCC/Clang sanitizers and fuzz smoke all passed
 at commit `4a587da33ef3b07b556f1375e1a17c888768bbd4`: [run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686).
 This supersedes earlier statements that Windows compilation had not run. It
 validates host code, not GPU/UEFI compatibility or the target-machine profile.
+
+## Inference-engine research
+
+[NInfer comparison](docs/NINFER_RESEARCH.md) reviews the specialized 22GB Turing
+fork and ninfer-all at fixed commits. Their reported Windows inference support
+is useful for stock baselines, but does not prove a hardware unlock or replace
+Strata's planned validation. No engine code or binary was imported.
+
+## Offline upstream comparison
+
+With a local checkout at the SHA in UPSTREAM_LOCK.md:
+
+```sh
+python scripts/check_upstream_differential.py /path/to/turing-upstream --cc gcc
+```
+
+See [differential testing](docs/DIFFERENTIAL_TESTING.md) for coverage and limits,
+and [input/API contracts](docs/INPUT_AND_API_CONTRACTS.md) for failure outputs and
+future firmware trust requirements. No real firmware profile is approved here.

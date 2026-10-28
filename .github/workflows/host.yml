@@ -21,6 +21,14 @@ jobs:
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DSANITIZE=ON
       - run: cmake --build build --parallel 2
       - run: ctest --test-dir build --output-on-failure
+      - uses: actions/checkout@v4
+        with:
+          repository: nlzy/turing-unlock
+          ref: 417f333263ff169e8f449c931b70db9dfd7b8ef4
+          path: build-upstream
+          persist-credentials: false
+      - name: Compare pure host contracts with pinned upstream
+        run: python3 scripts/check_upstream_differential.py build-upstream --cc "${{ matrix.compiler }}"
 
   windows:
     runs-on: windows-2022

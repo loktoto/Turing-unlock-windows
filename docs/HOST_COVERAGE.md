@@ -1,21 +1,21 @@
 # Host coverage snapshot — 2026-10-28
 
-GCC 14.2, Debug, `--coverage`, four CTest suites passed. Measured with
+GCC 14.2, Debug, `--coverage`, five CTest suites passed. Measured with
 `gcov -b CMakeFiles/tu102_host.dir/host/*.gcno CMakeFiles/tu102_platform_model.dir/host/*.gcno`.
 This measures deterministic unit tests, not cumulative fuzz coverage.
 
 | Source | Lines executed | Branches taken at least once |
 |---|---:|---:|
 | boot.c | 96.08% | 90.32% |
-| layout.c | 77.50% | 54.17% |
-| prep.c | 88.57% | 61.11% |
+| layout.c | 96.25% | 86.11% |
+| prep.c | 100.00% | 95.83% |
 | vbios.c | 96.88% | 86.54% |
 | platform_model.c | 100.00% | 91.56% |
 
-Aggregate reported line coverage: 93.83% of 551 lines, including diagnostic inline
+Aggregate reported line coverage: 98.00% of 551 lines, including diagnostic inline
 code. High coverage does not prove firmware authenticity, correctness of untested
-layouts, device quiescence, or target Windows boot safety. Layout and prep error
-branches are priority gaps, and model coverage is not coverage of a real adapter.
+layouts, device quiescence, or target Windows boot safety. Additional Layout/Prep boundary tests improved branch coverage; remaining unvisited
+branches still need case-by-case review, and model coverage is not coverage of a real adapter.
 
 Reproduce:
 

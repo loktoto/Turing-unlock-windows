@@ -1,47 +1,53 @@
-# G1 / Windows Host readiness — 2026-10-26
+# G1 / Windows Host readiness — 2026-10-28
 
 **Ready for Windows Host testing; full G1 remains BLOCKED.** No EFI unlocker is supplied.
 
 ## Executed evidence
 
-- GCC 14.2 Linux x64 Debug + ASan/UBSan: CTest 4/4 passed.
-- Clang 19.1.7 Linux x64 Debug + ASan/UBSan: CTest 4/4 passed.
-- Clang libFuzzer build: CTest 4/4 passed; final updated-parser campaign completed
-  10,000 runs with five synthetic format seeds plus evolved corpus, no sanitizer finding.
-  An earlier 10,000-run campaign also completed. This is bounded smoke, not exhaustive fuzzing.
-- GCC -fanalyzer over boot, layout, prep, vbios and platform_model: no diagnostics.
-- Same FWSEC test executable compiled against pinned original upstream vbios.c:
-  passed all 12,368 parser calls, including expected field values and rejection codes.
-  This compares shared synthetic expectations, not all output bytes or real firmware.
+- Linux x64 GCC 14.2 and Clang 19.1.7 Debug + ASan/UBSan: each CTest 5/5 passed
+  after the Layout/Prep boundary suite was added.
+- The Clang libFuzzer build's five CTest targets passed; a fresh synthetic-seeded
+  campaign completed 100,000 runs in 24 seconds with no sanitizer finding.
+  This bounded campaign is not exhaustive and is not a performance benchmark.
+- The repeatable [offline upstream comparison](DIFFERENTIAL_TESTING.md) passed
+  7,663 cases with both GCC and Clang against the locked upstream. It compares
+  return codes and successful named fields across retained Layout, Radix, ELF,
+  Booter, v4 boot descriptor, framebuffer readiness and FWSEC functions. The
+  upstream Booter build uses documented host shims; failure outputs intentionally
+  differ. Differential agreement is not an independent proof of correctness.
+- Earlier independent FWSEC contract tests also passed against the pinned original
+  parser (12,368 parser calls). Current [coverage](HOST_COVERAGE.md) records 98.00%
+  aggregate executed lines; some branch outcomes remain unvisited.
+- The prior five-source GCC -fanalyzer run emitted no diagnostics. This is not
+  a complete formal or security review.
+- Ten source-kit verification tests pass. The generated ZIP verifies against its
+  embedded SHA256 manifest; this proves internal consistency, not publisher identity.
 
-Test targets: host_contracts, fwsec_contracts, platform_model_contracts, boot_contracts.
-Coverage includes V2/V3 ROM/BIT descriptors, NPDE/multiple-image adjustment, truncation,
-overflow, malformed descriptors, ELF spans, layout/radix sizes, boot endian decoding,
-transactional boot outputs, and mocked ownership/failure/recovery transitions.
-All data is synthetic; no NVIDIA firmware, signatures, GPU or EFI operations are included.
+Test targets: host_contracts, fwsec_contracts, platform_model_contracts,
+boot_contracts and layout_prep_contracts. Synthetic data covers V2/V3 ROM/BIT,
+NPDE/multiple-image adjustment, truncation/overflow, malformed descriptors, ELF
+ambiguity and bounds, layout/radix boundaries, explicit boot byte ordering and
+mocked ownership/failure/recovery transitions. No executable firmware is supplied.
+
+## Windows evidence
+
+[Run 40637956001](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40637956001)
+at `d052ec2` passed the delivered PowerShell runner under Windows PowerShell with
+MSVC and clang-cl, plus Linux GCC/Clang sanitizers, fuzz smoke and source-kit jobs.
+It predates the new fifth suite/differential harness; later commits require fresh
+CI. Remote Windows compilation is not a target-GPU test. Windows result JSON/logs
+and the source ZIP are uploaded as workflow artifacts.
 
 ## Remaining acceptance evidence
 
-Windows MSVC and clang-cl builds/tests passed in GitHub Actions at `4a587da`
-([run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686));
-Linux GCC/Clang sanitizer and fuzz jobs also passed. That run used direct CMake
-commands, not the delivered PowerShell runner. A new CI job exercises the runner. Full G1 also
-needs wider differential/golden validation, measured coverage, longer fuzz campaigns,
-firmware-input authenticity design and review of platform model assumptions.
-Mocked success is not proof of hardware quiescence or safe boot handoff.
+The [input/API contract](INPUT_AND_API_CONTRACTS.md) specifies future firmware
+provenance and integrity requirements, but no real firmware profile is approved
+and no firmware loader admission implementation is supplied. The single-buffer
+platform model does not fulfill the documented multi-buffer DMA contract.
+Broader structure-aware testing, meaningful remaining branches, a longer fuzz
+campaign and independent acceptance review remain necessary before admitting G2.
 
-G0 target inventory/baselines are absent. G2–G6 remain unstarted. A Windows Host pass
-must not be interpreted as permission to deploy a GPU unlock EFI or claim compatibility.
-Follow WINDOWS_TESTING.md for the next test, preserving the original Windows boot setup.
-
-PowerShell 7 runner syntax and mocked native-process success/failure paths were
-checked on Linux by the Windows-kit worker. This does not verify VS2022 or PS5.1.
-
-## 2026-10-28 additions
-
-[Coverage](HOST_COVERAGE.md) now records deterministic test line/branch evidence;
-layout/prep error paths still have gaps. Ten source-kit verifier tests pass, and
-the generated ZIP verifies against its embedded SHA256 manifest. This checks
-internal consistency, not publisher identity or firmware authenticity.
-[Upstream research](UPSTREAM_RESEARCH.md) and the [gate ledger](MILESTONE_READINESS.md)
-record remaining acceptance conditions without claiming later milestones passed.
+G0 target inventory/baselines are absent. G2 remains a design; G3–G6 require the
+exact target and recovery evidence. See [milestone readiness](MILESTONE_READINESS.md).
+Source-kit verification and successful mocks must not be interpreted as permission
+to deploy a GPU unlock EFI or as evidence of target compatibility.
