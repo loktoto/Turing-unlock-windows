@@ -25,15 +25,20 @@ jobs:
   windows:
     runs-on: windows-2022
     timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        toolset: [v143, ClangCL]
     steps:
       - uses: actions/checkout@v4
-      - run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -T "${{ matrix.toolset }}"
-      - run: cmake --build build --config Debug
-      - run: ctest --test-dir build -C Debug --output-on-failure
+      - name: Test delivered PowerShell runner with both Windows toolsets
+        shell: powershell
+        run: .\scripts\Test-WindowsHost.ps1 -IncludeClangCL
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-host-results
+          path: |
+            artifacts/windows-host/**/result.json
+            artifacts/windows-host/**/*.log
+            artifacts/windows-host/**/ctest.xml
+          if-no-files-found: warn
 
   fuzz-smoke:
     runs-on: ubuntu-24.04
@@ -65,3 +70,16 @@ jobs:
           name: fuzz-failure
           path: fuzz-artifacts/
           if-no-files-found: ignore
+
+  source-kit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m unittest discover -s tests -p test_package.py -v
+      - run: python3 scripts/package_host_kit.py TU102_Windows_Host_Test_Kit.zip
+      - run: python3 scripts/verify_host_kit.py TU102_Windows_Host_Test_Kit.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TU102-Windows-Host-Test-Kit
+          path: TU102_Windows_Host_Test_Kit.zip

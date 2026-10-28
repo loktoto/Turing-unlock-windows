@@ -22,8 +22,10 @@ All data is synthetic; no NVIDIA firmware, signatures, GPU or EFI operations are
 
 ## Remaining acceptance evidence
 
-Windows MSVC/clang-cl and PowerShell runner execution require a Windows machine.
-The source kit and workflow are prepared, but remote CI has not run. Full G1 also
+Windows MSVC and clang-cl builds/tests passed in GitHub Actions at `4a587da`
+([run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686));
+Linux GCC/Clang sanitizer and fuzz jobs also passed. That run used direct CMake
+commands, not the delivered PowerShell runner. A new CI job exercises the runner. Full G1 also
 needs wider differential/golden validation, measured coverage, longer fuzz campaigns,
 firmware-input authenticity design and review of platform model assumptions.
 Mocked success is not proof of hardware quiescence or safe boot handoff.
@@ -34,3 +36,12 @@ Follow WINDOWS_TESTING.md for the next test, preserving the original Windows boo
 
 PowerShell 7 runner syntax and mocked native-process success/failure paths were
 checked on Linux by the Windows-kit worker. This does not verify VS2022 or PS5.1.
+
+## 2026-10-28 additions
+
+[Coverage](HOST_COVERAGE.md) now records deterministic test line/branch evidence;
+layout/prep error paths still have gaps. Ten source-kit verifier tests pass, and
+the generated ZIP verifies against its embedded SHA256 manifest. This checks
+internal consistency, not publisher identity or firmware authenticity.
+[Upstream research](UPSTREAM_RESEARCH.md) and the [gate ledger](MILESTONE_READINESS.md)
+record remaining acceptance conditions without claiming later milestones passed.

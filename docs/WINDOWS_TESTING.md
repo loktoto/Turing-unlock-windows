@@ -111,3 +111,10 @@ G2 is the later read-only EFI inspector; G3 separately verifies no-unlock
 handoff to the original Windows Boot Manager and recovery. Profile-specific
 unlock and stock driver/CUDA/Strata verification belong to later gates. Do not
 install boot components or attempt GPU/EFI work as part of this host check.
+
+## CI evidence update — 2026-10-28
+
+Windows MSVC and clang-cl, Linux GCC/Clang sanitizers and fuzz smoke all passed
+at commit `4a587da33ef3b07b556f1375e1a17c888768bbd4`: [run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686).
+This supersedes earlier statements that Windows compilation had not run. It
+validates host code, not GPU/UEFI compatibility or the target-machine profile.

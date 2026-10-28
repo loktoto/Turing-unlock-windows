@@ -23,3 +23,10 @@ firmware. Fuzz mutates the output directory, so do not check it into source cont
 Boot parsing now uses explicit little-endian loads and only publishes validated
 outputs. Windows compiler/PowerShell execution is still unverified in this Linux environment.
 CI configuration alone is not evidence of a successful remote run.
+
+## CI evidence update — 2026-10-28
+
+Windows MSVC and clang-cl, Linux GCC/Clang sanitizers and fuzz smoke all passed
+at commit `4a587da33ef3b07b556f1375e1a17c888768bbd4`: [run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686).
+This supersedes earlier statements that Windows compilation had not run. It
+validates host code, not GPU/UEFI compatibility or the target-machine profile.

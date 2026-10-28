@@ -99,3 +99,10 @@ To build a source-only ZIP with a SHA256 manifest:
 ```sh
 python scripts/package_host_kit.py TU102_Windows_Host_Test_Kit.zip
 ```
+
+## CI evidence update — 2026-10-28
+
+Windows MSVC and clang-cl, Linux GCC/Clang sanitizers and fuzz smoke all passed
+at commit `4a587da33ef3b07b556f1375e1a17c888768bbd4`: [run 40397802686](https://github.com/loktoto/Turing-unlock-windows/actions/runs/40397802686).
+This supersedes earlier statements that Windows compilation had not run. It
+validates host code, not GPU/UEFI compatibility or the target-machine profile.
