@@ -84,7 +84,7 @@ int main(void)
  static u8 boot[72+TU_BOOTER_IMAGE_SIZE+TU_BOOTER_SIG_TOTAL+1];
  const size_t boot_size=sizeof boot-1;
  static const u32 fields[14]={0,256,34048,25088,1,256,33792,256,0,34560,13,1,1,16};
- u8 descriptor[76]={4}; unsigned i,j,n=0;
+ u8 descriptor[77]={4}; unsigned i,j,n=0;
  /* Independent fixed examples catch identical regressions in both copies. */
  if (turing_unlock_radix_plan(4097,&p) || p.pages[3]!=2 || p.table_bytes!=12288 || p.data_bytes!=8192) return 2;
  if (turing_unlock_layout(&base,&out) || out.wpr_end!=(21ull<<30) || out.nonwpr_start!=(21ull<<30)-6291456) return 2;
@@ -117,8 +117,8 @@ int main(void)
  booter(n++,boot,boot_size-1); booter(n++,boot,sizeof boot);
  for(i=0;i<72;i++) { boot[i]^=0x80; booter(n++,boot,boot_size); boot[i]^=0x80; }
  n=0; for(i=0;i<=77;i++) desc(n++,descriptor,i,4096);
- for(i=0;i<sizeof sizes/sizeof sizes[0];i++) desc(n++,descriptor,sizeof descriptor,(u32)sizes[i]);
- for(i=0;i<76;i++) { descriptor[i]^=0x80; desc(n++,descriptor,sizeof descriptor,4096); descriptor[i]^=0x80; }
+ for(i=0;i<sizeof sizes/sizeof sizes[0];i++) desc(n++,descriptor,sizeof descriptor-1,(u32)sizes[i]);
+ for(i=0;i<76;i++) { descriptor[i]^=0x80; desc(n++,descriptor,sizeof descriptor-1,4096); descriptor[i]^=0x80; }
  for(i=0;i<1024;i++) printf("ready %u %u\n",i,(unsigned)turing_unlock_fb_range_ready(i));
  printf("ready max %u\n",(unsigned)turing_unlock_fb_range_ready(UINT32_MAX));
  printf("ready badf %u\n",(unsigned)turing_unlock_fb_range_ready(0xbadf03f0u));
